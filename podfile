@@ -1,0 +1,8 @@
+platform :ios, '10.0'
+
+target 'RXSwiftTest' do
+pod 'RxSwift'
+pod 'RxCocoa'
+pod 'SnapKit'
+end
+
