@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 import RxSwift
-let disposeBag : DisposeBag = DisposeBag()
+
 
 class CalcButtonContent : UIButton {
     var model : CalcModel? = nil
