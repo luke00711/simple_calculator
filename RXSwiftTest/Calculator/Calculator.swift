@@ -136,7 +136,7 @@ extension CalculatorContent : UITableViewDataSource, UITableViewDelegate{
         if(cell == nil){
             cell = UITableViewCell(style: .default, reuseIdentifier: cellIdentifier) as? CalcTableviewCell
         }
-        cell?.configureWith(items: dataModel!.allContent[indexPath.section], lastRow: indexPath.section == dataModel!.allContent.count-1)
+        cell?.configureWith(tv:tableView, items: dataModel!.allContent[indexPath.section], lastRow: indexPath.section == dataModel!.allContent.count-1)
        
         return cell!
     }

@@ -12,9 +12,9 @@ import UIKit
 
 class CalcTableviewCell : UITableViewCell {
     var items  : [CalcModel] = []
-    
+    var acModelView : CalcButtonContent?
     let padding   = 5.0
-    
+        
     var stackView = {
         let t = UIStackView()
         t.distribution = .fillEqually
@@ -32,7 +32,7 @@ class CalcTableviewCell : UITableViewCell {
         initUI()
     }
      
-    func configureWith(items  : [CalcModel] = [], lastRow: Bool = false){
+    func configureWith(tv : UITableView, items  : [CalcModel] = [], lastRow: Bool = false){
         stackView.removeFullyAllArrangedSubviews()
         if(lastRow){
             let temp = UIView()
@@ -70,19 +70,20 @@ class CalcTableviewCell : UITableViewCell {
             let model = items[item]
             let view = CalcButtonContent()
             view.configure(model: model)
+            if(model.refereshLabel()){
+                acModelView = view
+            }
+            stackView.addArrangedSubview(view)
             
-            if(lastRow){
-//                temp.matchToSuperview()
-//                temp.addSubview(view)
-                
-             
-            }else{
-                 stackView.addArrangedSubview(view)
-                 view.snp.makeConstraints { make in
-                     make.top.equalTo(stackView).offset(padding)
-                     make.bottom.equalTo(stackView).offset(-padding)
-               
-                 }
+            model.actionInfoSubject.asObservable().subscribe( onNext :{ _ in
+              let cell :CalcTableviewCell? =   tv.cellForRow(at: IndexPath(row: 0, section: 0)) as? CalcTableviewCell//取第一个row
+                cell?.acModelView?.refreshLabel()
+           }).disposed(by: disposeBag)
+            
+            view.snp.makeConstraints { make in
+                make.top.equalTo(stackView).offset(padding)
+                make.bottom.equalTo(stackView).offset(-padding)
+          
             }
         }
         

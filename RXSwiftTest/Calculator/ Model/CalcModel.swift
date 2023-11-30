@@ -80,21 +80,26 @@ struct CalcModel : Equatable{
     
     var value : String = ""
     var action : CalcAction
- 
+    var currentWrapper : CalcWrapper?
      let actionInfoSubject = PublishSubject<CalcModel>()
     
     let errorResult: Observable<Error>? = nil
     
-    init(value: String? = nil, action: CalcAction) {
+    init(value: String? = nil, action: CalcAction, wrapper : CalcWrapper? = nil) {
         self.value = value ?? ""
         self.action = action
+        self.currentWrapper = wrapper
        
      }
+    
+    func refereshLabel () -> Bool {
+        return action == CalcAction.ClearAll
+    }
     
     func text()-> String{
        switch action{
        case CalcAction.ClearAll:
-           return "AC"
+           return currentWrapper?.totalValue.isEmpty  == true ? "AC" : "C"
        case CalcAction.PosMin:
            return "+/-"
        case CalcAction.Mod:
@@ -148,7 +153,7 @@ class CalcWrapper {
     var equation : Array<CalcModel>  = []
     var actionInfo: Array<Observable<CalcModel>> = []
     
-    var firstRow : [CalcModel] = [CalcModel(action: CalcAction.ClearAll),CalcModel(action: CalcAction.PosMin),CalcModel(action: CalcAction.Mod),CalcModel(action: CalcAction.Divide)]
+    var firstRow : [CalcModel] = []
     
     var secondRow : [CalcModel] = [CalcModel(value:"7",action: CalcAction.Value), CalcModel(value:"8",action: CalcAction.Value), CalcModel(value:"9",action: CalcAction.Value),
                                    CalcModel(action: CalcAction.Multiply)]
@@ -166,6 +171,7 @@ class CalcWrapper {
     let equationInfoSubject = PublishSubject<String>()
     
     init() {
+       firstRow = [CalcModel(action: CalcAction.ClearAll, wrapper: self),CalcModel(action: CalcAction.PosMin),CalcModel(action: CalcAction.Mod),CalcModel(action: CalcAction.Divide)]
         
         firstRow.forEach { model in
             actionInfo.append(model.actionInfoSubject.asObservable())
@@ -190,6 +196,7 @@ class CalcWrapper {
         actionInfo.forEach { obss in
             obss.subscribe { [weak self] model in
                 self?.performSectionOn(model: model)
+          
                 self?.reloadContent( value: self?.totalValue)
             }.disposed(by: disposeBag)
         }
@@ -199,8 +206,6 @@ class CalcWrapper {
     
     func performSectionOn(model : CalcModel){
         
-            
-       
         if(model.action.checkEmpty() && totalValue.isEmpty){
            return
         }
@@ -281,6 +286,7 @@ class CalcWrapper {
             }
             break
         }
+        
     }
     
     func insertValue(){

@@ -41,6 +41,10 @@ class CalcButtonContent : UIButton {
 
     }
     
+    func refreshLabel(){
+        setTitle(model?.text(), for: .normal)
+    }
+    
     func configure(model:CalcModel?){
         self.model = model
         backgroundColor = model?.backgroundColor()
