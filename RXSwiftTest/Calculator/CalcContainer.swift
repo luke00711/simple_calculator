@@ -110,7 +110,7 @@ class CalContainer : UIView{
             self?.firstCalc.clearValue(dataModel: self?.secondCalc.dataModel)
         }).disposed(by: disposeBag)
         
-        
+        reloadConstraint()
        receivedRotation()
         
         NotificationCenter.default.rx.notification(UIDevice.orientationDidChangeNotification).take(until: rx.deallocated).subscribe(onNext: {[weak self] notif in
