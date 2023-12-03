@@ -54,17 +54,17 @@ class CalContainer : UIView{
     
     //通知监听触发的方法
     @objc func receivedRotation(){
-        if(UIDevice.current.orientation == UIDeviceOrientation.portrait){
-            secondCalc.isHidden = true
-            swapView.isHidden = true
-            firstCalc.showFullscreen()
-         
-        }else if(UIDevice.current.orientation == UIDeviceOrientation.landscapeLeft || UIDevice.current.orientation == UIDeviceOrientation.landscapeRight){
+        if(UIDevice.current.orientation == UIDeviceOrientation.landscapeLeft || UIDevice.current.orientation == UIDeviceOrientation.landscapeRight){
             secondCalc.isHidden = false// Device oriented horizontally, home button on the right
             swapView.isHidden = false
             firstCalc.changeToHalfScreen()
             swapView.reloadButtonPos()
             secondCalc.changeToHalfScreen(fitRight: true)
+        }else{
+            secondCalc.isHidden = true
+            swapView.isHidden = true
+            firstCalc.showFullscreen()
+
         }
        
     }
